@@ -25,3 +25,11 @@ class AIInsight(BaseModel):
 
 class AIInsightsResponse(BaseModel):
     insights: List[AIInsight]
+
+class CreateUserRequest(BaseModel):
+    username: str
+    password: str
+    
+class Token(BaseModel):
+    access_token: str
+    token_type: str

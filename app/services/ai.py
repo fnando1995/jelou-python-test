@@ -1,11 +1,11 @@
-from app.database import tweet_df
-from app.models import AIInsightsResponse, AIInsight
+from database import get_all
+from models import AIInsightsResponse, AIInsight
 import pandas as pd
 from collections import Counter
 import random
 
 def get_ai_insights(company_id: str) -> AIInsightsResponse:
-    global tweet_df
+    tweet_df = get_all()
     if tweet_df.empty:
         raise Exception("Dataset not loaded")
     

@@ -1,9 +1,9 @@
-from app.database import tweet_df
-from app.models import InsightsResponse
+from database import get_all
+from models import InsightsResponse
 import pandas as pd
 
 def compute_insights(company_id: str) -> InsightsResponse:
-    global tweet_df
+    tweet_df = get_all()
     if tweet_df.empty:
         raise Exception("Dataset not loaded")
 

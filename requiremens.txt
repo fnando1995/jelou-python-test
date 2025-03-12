@@ -3,5 +3,8 @@ uvicorn==0.34.0
 pandas==2.2.3
 python-multipart==0.0.20
 pydantic==2.10.6
+pydantic-settings==2.8.1
 pyjwt==2.10.1
 pytest==8.3.5
+kagglehub==0.3.10
+python-dotenv==1.0.1

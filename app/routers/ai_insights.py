@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.models import AIInsightsResponse
-from app.services.ai import get_ai_insights
-from app.dependencies import verify_token
+from models import AIInsightsResponse
+from services.ai import get_ai_insights
+from dependencies import verify_token
 
 router = APIRouter()
 

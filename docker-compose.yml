@@ -7,3 +7,5 @@ services:
       - "8000:8000"
     environment:
       - SECRET_KEY=your-secret-key
+    volumes:
+      - ./dbs/database.db:/app/database.db      
