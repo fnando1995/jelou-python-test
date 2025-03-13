@@ -21,7 +21,7 @@ class InsightsResponse(BaseModel):
 class AIInsight(BaseModel):
     issue: str
     percentage: float
-    sentiment: Optional[str] = None
+    sentiment:str = None
 
 class AIInsightsResponse(BaseModel):
     insights: List[AIInsight]

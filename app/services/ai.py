@@ -7,9 +7,9 @@ from transformers import pipeline
 from collections import Counter
 import re
 
-# # Initialize Hugging Face pipelines
-# topic_model = pipeline("zero-shot-classification")
-# sentiment_model = pipeline("sentiment-analysis")
+# Initialize Hugging Face pipelines
+topic_model = pipeline("zero-shot-classification")
+sentiment_model = pipeline("sentiment-analysis")
 
 # Define potential issues to classify (you can expand this list as needed)
 possible_labels = [
@@ -38,9 +38,9 @@ def analyze_tweets(tweets):
     for tweet in cleaned_tweets:
         # Use zero-shot classification to classify the topic of the tweet
         
-        # result = topic_model(tweet, candidate_labels=possible_labels)
-        # top_issue = result['labels'][0]  # Top label (issue)
-        top_issue = random.choice(possible_labels)
+        result = topic_model(tweet, candidate_labels=possible_labels)
+        top_issue = result['labels'][0]  # Top label (issue)
+        # top_issue = random.choice(possible_labels)
         issues.append(top_issue)
 
     # Count the frequency of each issue
@@ -53,7 +53,6 @@ def analyze_tweets(tweets):
         percentage = (count / total_tweets) * 100
         issue_metrics.append({
             "issue": issue,
-            # "count": count,
             "percentage": round(percentage, 2)
         })
 
@@ -66,38 +65,26 @@ def analyze_tweets(tweets):
     for issue_info in top_issues:
         # Filter tweets for this issue
         issue_tweets = [tweet for tweet, issue in zip(tweets, issues) if issue == issue_info['issue']]
-        sentiments = ["text_to_change"]*len(issue_tweets)#[sentiment_model(tweet)[0] for tweet in issue_tweets]
+        # sentiments = [ {'label':i} for i in random.choices(['POSITIVE', 'NEGATIVE'],k=len(issue_tweets))]
+        sentiments = [sentiment_model(tweet)[0] for tweet in issue_tweets]
         positive = sum(1 for sentiment in sentiments if sentiment['label'] == 'POSITIVE')
         negative = sum(1 for sentiment in sentiments if sentiment['label'] == 'NEGATIVE')
 
-        sentiment_summary = {
-            "positive": positive,
-            "negative": negative,
-            "total": len(sentiments)
-        }
-
-        issue_info["sentiment_summary"] = sentiment_summary
+        issue_info["sentiment"] = 'positive' if positive > negative else "negative"
 
 
-    top_issues = [ AIInsight(i) for i in top_issues]
+    top_issues = [ AIInsight(issue=issue_info["issue"],
+                                percentage=issue_info["percentage"],
+                                sentiment=issue_info["sentiment"]
+                                ) for issue_info in top_issues]
     return top_issues
-"""
-[
-{
- "issue": issue,
-"percentage: percentage,
-"sentiment_summary": sentiment_summary
-}
-]
-"""
-
 
 
 def get_ai_insights(company_id: str) -> AIInsightsResponse:
     tweet_df = load_all()
 
     if tweet_df.empty:
-        raise Exception("Dataset not loaded")
+        raise Exception("No company id found")
     
     tweet_df = tweet_df[tweet_df["author_id"] == company_id]
     
@@ -116,22 +103,5 @@ def get_ai_insights(company_id: str) -> AIInsightsResponse:
     texts = customer_tweets["text"].tolist()
     
     insights = analyze_tweets(texts)
-    print(insights)
-
-    # # Simulate an AI model extracting keywords by counting word frequencies
-    # all_words = " ".join(texts).split()
-    # word_counts = Counter(all_words)
-    # # Exclude a small set of common stopwords
-    # stopwords = {"the", "and", "is", "to", "of", "a", "in", "for", "it", "on"}
-    # filtered = {word.lower(): count for word, count in word_counts.items() if word.lower() not in stopwords}
-    # top_words = sorted(filtered.items(), key=lambda x: x[1], reverse=True)[:5]
-
-    # total_count = sum(filtered.values())
-    # insights = []
-    # for word, count in top_words:
-    #     percentage = (count / total_count) * 100 if total_count > 0 else 0
-    #     # Simulate sentiment analysis (here, randomly assigned)
-    #     sentiment = random.choice(["positive", "negative", "neutral"])
-    #     insights.append(AIInsight(issue=word, percentage=percentage, sentiment=sentiment))
-    
+        
     return AIInsightsResponse(insights=insights)

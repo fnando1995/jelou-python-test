@@ -1,13 +1,13 @@
 from fastapi import APIRouter, HTTPException, Depends
 from models import InsightsResponse
 from services.metrics import compute_insights
-from dependencies import verify_token
+from routers.auth import oauth2_scheme
 
 router = APIRouter()
 
 @router.get("/{company_id}/insights", response_model=InsightsResponse)
-# async def get_insights(company_id: str, payload: dict = Depends(verify_token)):
-async def get_insights(company_id: str):
+async def get_insights(company_id: str, payload: dict = Depends(oauth2_scheme)):
+# async def get_insights(company_id: str):
     try:
         insights = compute_insights(company_id)
         return insights
