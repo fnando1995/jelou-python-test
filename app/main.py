@@ -25,6 +25,8 @@ app.include_router(insights.router, prefix="/companies", tags=["Insights"])
 app.include_router(ai_insights.router, prefix="/companies", tags=["AI Insights"])
 app.include_router(auth.router, prefix="/auth", tags=["Authorization"])
 
+
+
 # Every http request forwarded
 @app.middleware("http")
 async def log_requests(request: Request, call_next):

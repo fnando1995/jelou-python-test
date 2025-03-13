@@ -6,7 +6,8 @@ from dependencies import verify_token
 router = APIRouter()
 
 @router.get("/{company_id}/insights", response_model=InsightsResponse)
-async def get_insights(company_id: str, payload: dict = Depends(verify_token)):
+# async def get_insights(company_id: str, payload: dict = Depends(verify_token)):
+async def get_insights(company_id: str):
     try:
         insights = compute_insights(company_id)
         return insights
