@@ -1,9 +1,10 @@
-version: "3.8"
-
 services:
-  web:
+  fastapi:
     build: .
+    container_name: fastapi-app
     ports:
-      - "8000:8000"
-    environment:
-      - SECRET_KEY=your-secret-key
+      - "8000:8000"   
+    volumes:
+      - ./app:/jelou/app  
+    env_file:
+      - .env
