@@ -9,6 +9,7 @@ router = APIRouter()
 # async def get_ai_insights_endpoint(company_id: str, token: dict = Depends(verify_token)):
 async def get_ai_insights_endpoint(company_id: str):
     try:
+        print(company_id)
         insights = get_ai_insights(company_id)
         return insights
     except Exception as e:

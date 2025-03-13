@@ -4,8 +4,10 @@ import pandas as pd
 
 def compute_insights(company_id: str) -> InsightsResponse:
     tweet_df = load_all()
+
     if tweet_df.empty:
         raise Exception("Dataset not loaded")
+    
     tweet_df = tweet_df[tweet_df["author_id"] == company_id]
     
     if tweet_df.empty:

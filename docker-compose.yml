@@ -1,11 +1,24 @@
-version: "3.8"
-
 services:
-  web:
+  fastapi:
     build: .
+    container_name: fastapi-app
     ports:
-      - "8000:8000"
-    environment:
-      - SECRET_KEY=your-secret-key
+      - "8000:8000"   # Map the container's port 80 to the host's port 8000
     volumes:
-      - ./dbs/database.db:/app/database.db      
+      - ./app:/jelou/app  
+    env_file:
+      - .env
+    depends_on:
+      - sqlite-db
+
+  sqlite-db:
+    image: nouchka/sqlite3:latest  # SQLite image for the volume (you don't really need a separate container for SQLite)
+    container_name: sqlite-db
+    volumes:
+      - ./app/dbs:/jelou/app/dbs   # Mount database directory to persist data
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
