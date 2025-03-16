@@ -16,3 +16,5 @@ transformers==4.46.2
 datasets==3.3.2
 tensorflow==2.16.1
 tensorboard==2.16.0
+pytest-asyncio==0.25.3
+httpx==0.28.1

@@ -1,11 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-
-from routers import ingest, insights, ai_insights, auth
-from config import settings
+from routers import ingest, insights, auth, ai_insights
 from logger import logger
-
+import uvicorn
 
 # FastAPI app
 app = FastAPI(title="Customer Support Insights API", version="1.0.0")
@@ -26,6 +23,9 @@ app.include_router(ai_insights.router, prefix="/companies", tags=["AI Insights"]
 app.include_router(auth.router, prefix="/auth", tags=["Authorization"])
 
 
+@app.get("/")
+async def root():
+    return {"message": "Welcome to the Customer Support Insights API!"}
 
 # Every http request forwarded
 @app.middleware("http")
