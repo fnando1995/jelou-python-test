@@ -1,7 +1,9 @@
 import os 
 import logging
 
-LOG_DIR = "logs"
+
+
+LOG_DIR = os.path.join(os.path.dirname(__file__),"logs")
 # ensure folder is created
 os.makedirs(LOG_DIR, exist_ok=True)
 
@@ -16,3 +18,6 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+def get_logger():
+    return logger
